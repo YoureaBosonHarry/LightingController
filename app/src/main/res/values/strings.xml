@@ -2,6 +2,7 @@
     <string name="app_name">LightingController</string>
     <string name="tab_text_1">Lantern Colors</string>
     <string name="tab_text_2">Lantern Patterns</string>
+    <string name="lantern_0">Lantern 0</string>
     <string name="lantern_1">Lantern 1</string>
     <string name="lantern_2">Lantern 2</string>
     <string name="lantern_3">Lantern 3</string>
@@ -9,7 +10,6 @@
     <string name="lantern_5">Lantern 5</string>
     <string name="lantern_6">Lantern 6</string>
     <string name="lantern_7">Lantern 7</string>
-    <string name="lantern_8">Lantern 8</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="all_lanterns">All Lanterns</string>

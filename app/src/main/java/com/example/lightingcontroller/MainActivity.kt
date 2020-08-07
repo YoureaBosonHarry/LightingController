@@ -9,11 +9,12 @@ import androidx.viewpager.widget.ViewPager
 import com.example.lightingcontroller.ui.main.SectionsPagerAdapter
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
 
-    private val url = "192.168.50.102"
+    private val url = "192.168.50.102:80"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,14 +52,12 @@ class MainActivity : AppCompatActivity() {
             .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
             .density(12)
             .setOnColorSelectedListener { selectedColor ->
-               println("Change")
+                handleColorChange(selectedColor, id, selectedColor.toUInt().toString(16), name)
             }
             .setPositiveButton(
                 "ok"
-            ) { _, selectedColor, _ ->
-                changeBackgroundColor(selectedColor, id)
-                val argb = selectedColor.toUInt().toString(16)
-                sendPattern(name.takeLast(1).toInt(),"solid", argb.takeLast(6), 1.0)
+            ) { _, _, _ ->
+                println("Selected")
             }
             .setNegativeButton(
                 "cancel"
@@ -67,14 +66,16 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun changeBackgroundColor(selectedColor: Int, id: Int) {
-        if (resources.getResourceEntryName(id).takeLast(1).toInt() == 0){
-            for (i in 1..8) {
+    private fun handleColorChange(selectedColor: Int, id: Int, argb: String, name: String){
+        if (resources.getResourceEntryName(id).takeLast(1).toInt() == 8){
+            for (i in 0..7) {
                 val buttonId = resources.getIdentifier("button$i", "id", packageName)
+                sendPattern(i,"solid", argb.takeLast(6), 1.0)
                 findViewById<Button>(buttonId).setBackgroundColor(selectedColor)
             }
         }
         else {
+            sendPattern(id, "solid", argb, 1.0)
             val button = findViewById<Button>(id)
             button.setBackgroundColor(selectedColor)
         }
@@ -83,8 +84,8 @@ class MainActivity : AppCompatActivity() {
     private fun sendPattern(lanternId: Int, pattern: String, hexColor: String, frequency: Double) {
         val url = "http://$url/sendPattern?id=$lanternId&pattern=$pattern&hexColor=$hexColor&frequency=$frequency"
         println(url)
-        //Fuel.post(url)
-        //    .timeout(400)
-        //    .responseString {_, _, response -> println(response.component1())}
+        Fuel.post(url)
+            .timeout(400)
+            .responseString {_, _, response -> println(response.component1())}
     }
 }
