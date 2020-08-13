@@ -75,14 +75,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         else {
-            sendPattern(id, "solid", argb, 1.0)
+            sendPattern(resources.getResourceEntryName(id).takeLast(1).toInt(), "solid", argb.takeLast(6), 1.0)
             val button = findViewById<Button>(id)
             button.setBackgroundColor(selectedColor)
         }
     }
 
     private fun sendPattern(lanternId: Int, pattern: String, hexColor: String, frequency: Double) {
-        val url = "http://$url/sendPattern?id=$lanternId&pattern=$pattern&hexColor=$hexColor&frequency=$frequency"
+        val url = "http://$url/changeLanternPattern?id=$lanternId&pattern=$pattern&hexColor=$hexColor&frequency=$frequency"
         println(url)
         Fuel.post(url)
             .timeout(400)
